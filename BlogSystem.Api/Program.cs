@@ -1,3 +1,4 @@
+using BlogSystem.Api;
 using BlogSystem.Infrastructure;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,7 @@ builder.Services.AddPersistanceServices(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddApiDependency(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
