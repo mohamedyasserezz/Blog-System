@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>355c3cf1-a784-417d-b2b4-b336e2aed515</UserSecretsId>
+    <UserSecretsId>861e5533-7e7e-4615-a522-73cbb2ff05a6</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlogSystem.Infrastructure\BlogSystem.Infrastructure.csproj" />
-    <ProjectReference Include="..\BlogSystem.Service\BlogSystem.Service.csproj" />
   </ItemGroup>
 
 </Project>

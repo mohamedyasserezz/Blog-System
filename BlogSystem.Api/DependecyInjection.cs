@@ -1,4 +1,4 @@
-﻿using BlogSystem.Domain.Contract.Authentication;
+﻿using BlogSystem.Domain.Contract.Service.Authentication;
 using BlogSystem.Domain.Enities;
 using BlogSystem.Infrastructure.Data;
 using BlogSystem.Service.Authentication;
@@ -9,7 +9,7 @@ using System.Text;
 
 namespace BlogSystem.Api
 {
-	public static class DependecyInjection
+    public static class DependecyInjection
 	{
 		public static IServiceCollection AddApiDependency(this IServiceCollection services, IConfiguration configuration)
 		{

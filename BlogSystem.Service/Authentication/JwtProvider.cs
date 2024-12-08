@@ -1,4 +1,4 @@
-﻿using BlogSystem.Domain.Contract.Authentication;
+﻿using BlogSystem.Domain.Contract.Service.Authentication;
 using BlogSystem.Domain.Enities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BlogSystem.Service.Authentication
 {
-	public class JwtProvider : IJwtProvider
+    public class JwtProvider : IJwtProvider
 	{
 		private readonly JwtOptions _jwtOptions;
 		public JwtProvider(IOptions<JwtOptions> jwtOptions)
