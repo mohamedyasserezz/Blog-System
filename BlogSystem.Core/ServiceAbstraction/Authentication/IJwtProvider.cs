@@ -1,11 +1,6 @@
 ﻿using BlogSystem.Domain.Enities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BlogSystem.Domain.Contract.Service.Authentication
+namespace BlogSystem.Core.ServiceAbstraction.Authentication
 {
     public interface IJwtProvider
     {

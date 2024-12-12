@@ -1,4 +1,4 @@
-﻿using BlogSystem.Domain.Contract.Service.Authentication;
+﻿using BlogSystem.Core.ServiceAbstraction.Authentication;
 using BlogSystem.Domain.Enities;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
