@@ -1,6 +1,5 @@
-﻿using BlogSystem.Core.Models;
-using BlogSystem.Core.ServiceAbstraction.Posts;
-using Microsoft.AspNetCore.Http;
+﻿using BlogSystem.Domain.Contract.Posts;
+using BlogSystem.Shared.Models.Posts;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 

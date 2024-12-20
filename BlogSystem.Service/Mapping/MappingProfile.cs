@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using BlogSystem.Core.Models;
 using BlogSystem.Domain.Enities;
+using BlogSystem.Shared.Models.Posts;
 
 namespace BlogSystem.Service.Mapping
 {

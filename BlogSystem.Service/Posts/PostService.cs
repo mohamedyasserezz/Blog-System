@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using BlogSystem.Core.Models;
-using BlogSystem.Core.ServiceAbstraction.Posts;
 using BlogSystem.Domain.Contract.Infrastructure;
+using BlogSystem.Domain.Contract.Posts;
 using BlogSystem.Domain.Enities;
+using BlogSystem.Shared.Models.Posts;
 using Microsoft.AspNetCore.Identity;
-using System.Threading;
 
 namespace BlogSystem.Service.Posts
 {

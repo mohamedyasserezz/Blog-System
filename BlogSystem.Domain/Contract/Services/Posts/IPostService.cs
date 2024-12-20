@@ -1,7 +1,7 @@
-﻿using BlogSystem.Core.Models;
-using BlogSystem.Domain.Enities;
+﻿using BlogSystem.Domain.Enities;
+using BlogSystem.Shared.Models.Posts;
 
-namespace BlogSystem.Core.ServiceAbstraction.Posts
+namespace BlogSystem.Domain.Contract.Posts
 {
     public interface IPostService
     {
