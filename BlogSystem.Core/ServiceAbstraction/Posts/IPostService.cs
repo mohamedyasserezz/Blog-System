@@ -5,6 +5,6 @@ namespace BlogSystem.Core.ServiceAbstraction.Posts
 {
     public interface IPostService
     {
-        Task<Post?> CreatePostAsync(string userEmail, PostToCreateDto postToCreateDto);
+        Task<Post?> CreatePostAsync(string userEmail, PostToCreateDto postToCreateDto, CancellationToken cancellationToken = default);
     }
 }
