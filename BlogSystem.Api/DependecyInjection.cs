@@ -1,4 +1,4 @@
-﻿using BlogSystem.Core.ServiceAbstraction.Authentication;
+﻿using BlogSystem.Domain.Contract.Authentication;
 using BlogSystem.Domain.Enities;
 using BlogSystem.Infrastructure.Data;
 using BlogSystem.Service.Authentication;

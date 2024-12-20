@@ -1,6 +1,6 @@
 ﻿using BlogSystem.Domain.Enities;
 
-namespace BlogSystem.Core.ServiceAbstraction.Authentication
+namespace BlogSystem.Domain.Contract.Authentication
 {
     public interface IJwtProvider
     {

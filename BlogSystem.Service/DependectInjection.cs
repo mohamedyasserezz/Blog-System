@@ -1,4 +1,4 @@
-﻿using BlogSystem.Core.ServiceAbstraction.Posts;
+﻿using BlogSystem.Domain.Contract.Posts;
 using BlogSystem.Service.Mapping;
 using BlogSystem.Service.Posts;
 using Microsoft.Extensions.Configuration;
