@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\BlogSystem.Infrastructure\BlogSystem.Infrastructure.csproj" />
     <ProjectReference Include="..\BlogSystem.Service\BlogSystem.Service.csproj" />
+    <ProjectReference Include="..\BlogSystem.Shared\BlogSystem.Shared.csproj" />
   </ItemGroup>
 
 </Project>
