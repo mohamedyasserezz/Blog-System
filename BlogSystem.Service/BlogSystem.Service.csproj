@@ -13,8 +13,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlogSystem.Core\BlogSystem.Core.csproj" />
     <ProjectReference Include="..\BlogSystem.Domain\BlogSystem.Domain.csproj" />
+    <ProjectReference Include="..\BlogSystem.Shared\BlogSystem.Shared.csproj" />
   </ItemGroup>
 
 </Project>
