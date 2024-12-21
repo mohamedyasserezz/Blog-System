@@ -10,6 +10,9 @@ namespace BlogSystem.Service.Mapping
         {
             CreateMap<Post, PostToCreateDto>()
                 .ReverseMap();
-        }
+
+			CreateMap<Post, PostToCreateDto>()
+			   .ReverseMap();
+		}
     }
 }
