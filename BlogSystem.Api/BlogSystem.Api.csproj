@@ -4,7 +4,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+<<<<<<< Updated upstream
     <UserSecretsId>6ad75689-48cc-44d3-ab33-3c7e64eb1aa0</UserSecretsId>
+=======
+    <UserSecretsId>861e5533-7e7e-4615-a522-73cbb2ff05a6</UserSecretsId>
+>>>>>>> Stashed changes
   </PropertyGroup>
 
   <ItemGroup>
