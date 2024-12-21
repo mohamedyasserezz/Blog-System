@@ -12,14 +12,15 @@ namespace BlogSystem.Api.Controllers
         private readonly IPostService _postService = postService;
 
         [HttpPost("create-post")]
-        public async Task<IActionResult> CreatePost(PostToCreateDto postToCreateDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreatePost(PostRequest postToCreateDto, CancellationToken cancellationToken)
         {
 
             var userEmail = User.FindFirstValue(ClaimTypes.Email);
 
-            var response = await _postService.CreatePostAsync(userEmail, postToCreateDto, cancellationToken);
+            var response = await _postService.CreatePostAsync(postToCreateDto, cancellationToken);
 
-            return response is null ? BadRequest() : Ok(response);
+            return response.Value is null ? BadRequest(response.Error) : Ok(response.Value);
+
         }
 
     }

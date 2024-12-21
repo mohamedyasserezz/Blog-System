@@ -2,6 +2,8 @@
 using BlogSystem.Domain.Contract.Infrastructure;
 using BlogSystem.Domain.Contract.Posts;
 using BlogSystem.Domain.Enities;
+using BlogSystem.Shared.Abstractions;
+using BlogSystem.Shared.Common.Errors;
 using BlogSystem.Shared.Models.Posts;
 using Microsoft.AspNetCore.Identity;
 
@@ -17,25 +19,22 @@ namespace BlogSystem.Service.Posts
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly IMapper _mapper = mapper;
 
-        public async Task<Post?> CreatePostAsync(string userEmail, PostToCreateDto postToCreateDto, CancellationToken cancellationToken = default)
+        public async Task<Result<PostResponse>> CreatePostAsync(PostRequest postRequest, CancellationToken cancellationToken = default)
         {
-            var user = await _userManager.FindByEmailAsync(userEmail);
 
-            if (user is null) return null;
+            var post = _mapper.Map<Post>(postRequest);
 
-
-            var post = _mapper.Map<Post>(postToCreateDto);
-
-            
-            if (post is null) return null;
+            if (post is null) return Result.Failer<PostResponse>(PostErrors.PostNotFound);
 
             await _unitOfWork.GetRepository<Post>().AddAsync(post);
 
             var created = await unitOfWork.CompleteAsync() > 0;
 
-            if (!created) return null;  
+            if (!created) return Result.Failer<PostResponse>(PostErrors.PostNotFound);
 
-            return post;
+            var postResponse = _mapper.Map<PostResponse>(post);
+
+            return Result.Success(postResponse);
         }
     }
 }
