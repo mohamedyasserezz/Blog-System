@@ -8,13 +8,13 @@ using AutoMapper;
 using BlogSystem.Domain.Contract.Authentication;
 using BlogSystem.Domain.Contract.Services.Authentication;
 using BlogSystem.Domain.Enities;
+using BlogSystem.Shared.Abstractions;
+using BlogSystem.Shared.Common.Errors;
 using BlogSystem.Shared.Models.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace BlogSystem.Service.Authentication
 {
@@ -30,19 +30,19 @@ namespace BlogSystem.Service.Authentication
 			_jwtProvider = jwtProvider;
 			_mapper = mapper;
 		}
-		public async Task<AuthResponse> Login(LoginAuthRequest request, CancellationToken cancellationToken = default)
+		public async Task<Result<AuthResponse>> Login(LoginAuthRequest request, CancellationToken cancellationToken = default)
 		{
 			var user = await _userManger.FindByEmailAsync(request.Email);
-			if(user is null)
-				return null;
+			if (user is null)
+				return Result.Failer<AuthResponse>(UserErrors.InvalidCredentails);
 
 			var validUserPassword = await _userManger.CheckPasswordAsync(user, request.Password);
 
 			if (!validUserPassword)
-				return null;
+				return Result.Failer<AuthResponse>(UserErrors.InvalidCredentails);
 
 			var userRole = await _userManger.GetRolesAsync(user);
-			var (token,expireIn) = _jwtProvider.GenerateToken(user, userRole);
+			var (token, expireIn) = _jwtProvider.GenerateToken(user, userRole);
 
 			var refreshToken = GenerateRefreshToken();
 			var refreshTokenExpiration = DateTime.UtcNow.AddDays(_refreshTokenExpiryDays);
@@ -53,15 +53,18 @@ namespace BlogSystem.Service.Authentication
 				ExpiresOn = refreshTokenExpiration
 			});
 			await _userManger.UpdateAsync(user);
-			return new AuthResponse(user.Id, user.Email, user.FirstName, user.LastName, token, expireIn, refreshToken, refreshTokenExpiration);
+			var response = new AuthResponse(user.Id, user.Email, user.FirstName, user.LastName, token, expireIn, refreshToken, refreshTokenExpiration);
+			return Result.Success(response);
 		}
-		public async Task<bool> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
+		public async Task<Result> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default)
 		{
 			var emailIsExist = await _userManger.Users.AnyAsync(x => x.Email == request.Email, cancellationToken);
 			if (emailIsExist)
-				return false;
+				return Result.Failer<AuthResponse>(UserErrors.InvalidJwtToken);
+
 			var user = _mapper.Map<ApplicationUser>(request);
 			user.UserName = request.Email;
+			user.EmailConfirmed = true;
 
 			var result = await _userManger.CreateAsync(user, request.Password);
 			if (result.Succeeded)
@@ -69,10 +72,43 @@ namespace BlogSystem.Service.Authentication
 				var code = await _userManger.GenerateEmailConfirmationTokenAsync(user);
 				code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
 
-				return true;
+				return Result.Success();
 			}
-			return false;
+			var error = result.Errors.First();
+			return Result.Failer(new Error(error.Code, error.Description, StatusCodes.Status400BadRequest));
 
+		}
+		public async Task<Result<AuthResponse>> GetRefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default)
+		{
+			var userId = _jwtProvider.ValidateToken(token);
+			if (userId is null)
+				return Result.Failer<AuthResponse>(UserErrors.InvalidJwtToken);
+
+			var user = await _userManger.FindByIdAsync(userId);
+
+			if (user is null)
+				return Result.Failer<AuthResponse>(UserErrors.InvalidJwtToken);
+
+			var userRefreshToken = user.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken && x.IsActive);
+
+			if (userRefreshToken is null)
+				return Result.Failer<AuthResponse>(UserErrors.InvalidJwtToken);
+
+			userRefreshToken.RevokedOn = DateTime.UtcNow;
+			var userRole = await _userManger.GetRolesAsync(user);
+			var (newToken, expiresIn) = _jwtProvider.GenerateToken(user, userRole);
+
+			var newRefreshToken = GenerateRefreshToken();
+			var refreshTokenExpiration = DateTime.UtcNow.AddDays(_refreshTokenExpiryDays);
+
+			user.RefreshTokens.Add(new RefreshToken
+			{
+				Token = newRefreshToken,
+				ExpiresOn = refreshTokenExpiration
+			});
+			await _userManger.UpdateAsync(user);
+			var response = new AuthResponse(user.Id, user.Email, user.FirstName, user.LastName, newToken, expiresIn, newRefreshToken, refreshTokenExpiration);
+			return Result.Success(response);
 		}
 		private static string GenerateRefreshToken()
 		{

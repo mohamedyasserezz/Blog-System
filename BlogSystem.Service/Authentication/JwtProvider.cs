@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace BlogSystem.Service.Authentication
 {
-    public class JwtProvider : IJwtProvider
+	public class JwtProvider : IJwtProvider
 	{
 		private readonly JwtOptions _jwtOptions;
 		public JwtProvider(IOptions<JwtOptions> jwtOptions)
@@ -37,6 +37,29 @@ namespace BlogSystem.Service.Authentication
 				signingCredentials: singingCredentials
 				);
 			return (token: new JwtSecurityTokenHandler().WriteToken(token), expiresIn: _jwtOptions.ExpireTimeInMinutes * 60);
+		}
+
+		public string? ValidateToken(string token)
+		{
+			var tokenHandler = new JwtSecurityTokenHandler();
+			var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
+			try
+			{
+				tokenHandler.ValidateToken(token, new TokenValidationParameters
+				{
+					IssuerSigningKey = symmetricSecurityKey,
+					ValidateIssuerSigningKey = true,
+					ValidateIssuer = false,
+					ValidateAudience = false,
+					ClockSkew = TimeSpan.Zero
+				}, out SecurityToken validatedToken);
+				var jwtToken = (JwtSecurityToken)validatedToken;
+				return jwtToken.Claims.First(x => x.Type == JwtRegisteredClaimNames.Sub).Value;
+			}
+			catch
+			{
+				return null;
+			}
 		}
 	}
 }
