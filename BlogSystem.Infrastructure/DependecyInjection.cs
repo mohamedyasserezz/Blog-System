@@ -1,6 +1,5 @@
 ﻿using BlogSystem.Domain.Contract.Infrastructure;
 using BlogSystem.Infrastructure.Data;
-using BlogSystem.Infrastructure.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
