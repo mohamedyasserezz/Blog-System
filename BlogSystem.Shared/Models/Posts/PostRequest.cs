@@ -1,8 +1,8 @@
 ﻿namespace BlogSystem.Shared.Models.Posts
 {
-    public record PostToCreateDto(
+    public record PostRequest(
     string Title,
     string Content,
-    string AuthorId
+    ICollection<TagRequest> Tags
     );
 }
