@@ -8,11 +8,13 @@ namespace BlogSystem.Service.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<Post, PostToCreateDto>()
+            CreateMap<PostRequest, Post>()
+                .ForMember(src =>src.Tags , config => config.MapFrom(des => des.Tags))
                 .ReverseMap();
 
-			CreateMap<Post, PostToCreateDto>()
-			   .ReverseMap();
+			CreateMap<Post, PostRequest>()
+                .ForMember(src => src.Tags, config => config.MapFrom(des => des.Tags))
+               .ReverseMap();
 		}
     }
 }
