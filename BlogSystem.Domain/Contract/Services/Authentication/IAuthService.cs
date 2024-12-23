@@ -13,5 +13,7 @@ namespace BlogSystem.Domain.Contract.Services.Authentication
 		public Task<Result<AuthResponse>> Login(LoginAuthRequest request, CancellationToken cancellationToken = default);
 		public Task<Result> RegisterAsync(RegisterRequest request, CancellationToken cancellationToken = default);
 		public Task<Result<AuthResponse>> GetRefreshTokenAsync(string token, string refreshToken, CancellationToken cancellationToken = default);
+		public Task<Result> SendResetPasswordCodeAsync(string email);
+		public Task<Result> ResetPasswordAsync(ResetPasswordRequest request);
 	}
 }
