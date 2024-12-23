@@ -10,6 +10,5 @@ namespace BlogSystem.Domain.Contract.Posts
         Task<Result<PostResponse>> CreatePostAsync(PostRequest postRequest, CancellationToken cancellationToken = default);
         Task<Result> UpdateAsync(int id, PostRequest poll, CancellationToken cancellationToken = default);
         Task<Result> DeleteAsync(int id, CancellationToken cancellationToken = default);
-        //Task<Result> TogglePublishStatusAsync(int id, CancellationToken cancellationToken = default);
     }
 }

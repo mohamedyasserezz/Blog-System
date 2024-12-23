@@ -27,7 +27,6 @@ namespace BlogSystem.Service.Posts
 
             return Result.Success(postResponse);
         }
-
         public async Task<Result<PostResponse>> CreatePostAsync(PostRequest postRequest, CancellationToken cancellationToken = default)
         {
 
@@ -45,11 +44,6 @@ namespace BlogSystem.Service.Posts
 
             return Result.Success(postResponse);
         }
-
-       
-
-      
-
         public async Task<Result> UpdateAsync(int id, PostRequest postRequest, CancellationToken cancellationToken = default)
         {
             var Current = await _unitOfWork.GetRepository<Post>().GetByIdAsync(id, cancellationToken);

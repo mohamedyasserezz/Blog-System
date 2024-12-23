@@ -42,5 +42,18 @@ namespace BlogSystem.Api.Controllers
                    : result.ToProblem();
         }
 
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id,
+        CancellationToken cancellationToken)
+        {
+            var isDeleted = await _postService.DeleteAsync(id, cancellationToken);
+
+            if (isDeleted.IsSuccess)
+            {
+                return NoContent();
+            }
+            return isDeleted.ToProblem();
+        }
+
     }
 }
