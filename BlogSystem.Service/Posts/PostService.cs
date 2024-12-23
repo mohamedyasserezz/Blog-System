@@ -11,12 +11,10 @@ namespace BlogSystem.Service.Posts
 {
     internal class PostService(
         IUnitOfWork unitOfWork,
-        UserManager<ApplicationUser> userManager,
         IMapper mapper
         ) : IPostService
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
-        private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly IMapper _mapper = mapper;
 
         public async Task<Result<PostResponse>> CreatePostAsync(PostRequest postRequest, CancellationToken cancellationToken = default)
