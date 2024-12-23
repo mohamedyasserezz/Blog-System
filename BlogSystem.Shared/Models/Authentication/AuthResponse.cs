@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BlogSystem.Shared.Models.Authentication
 {
-	public class AuthResponse
+	public record AuthResponse
 	(
 		string Id,
 		string? Email,

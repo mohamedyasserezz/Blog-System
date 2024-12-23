@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BlogSystem.Domain.Enities;
+using BlogSystem.Shared.Models.Authentication;
 using BlogSystem.Shared.Models.Posts;
 
 namespace BlogSystem.Service.Mapping
@@ -15,6 +16,9 @@ namespace BlogSystem.Service.Mapping
 			CreateMap<Post, PostRequest>()
                 .ForMember(src => src.Tags, config => config.MapFrom(des => des.Tags))
                .ReverseMap();
+
+			CreateMap<ApplicationUser, RegisterRequest>()
+				.ReverseMap();
 		}
     }
 }

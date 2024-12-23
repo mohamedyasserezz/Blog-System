@@ -27,7 +27,6 @@ namespace BlogSystem.Api.Controllers
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] LoginAuthRequest request, CancellationToken cancellationToken)
 		{
-			_logger.LogInformation("Logging with email: {email} and password:{passwrod}", request.Email, request.Password);
 			var authResult = await _authService.Login(request, cancellationToken);
 			return authResult.IsSuccess ? Ok(authResult.Value) : authResult.ToProblem();
 		}
@@ -41,9 +40,21 @@ namespace BlogSystem.Api.Controllers
 		public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest request, CancellationToken cancellationToken)
 		{
 			var result = await _authService.GetRefreshTokenAsync(request.Token, request.RefreshToken, cancellationToken);
-			return result.IsSuccess
-				? Ok()
-				: Problem(statusCode: StatusCodes.Status400BadRequest, title: result.Error.Code, detail: result.Error.Description);
+			return result.IsSuccess ? Ok() : result.ToProblem();
+		}
+
+		[HttpPost("forget-password")]
+		public async Task<IActionResult> ForgetPassword([FromBody] ForgetPasswrodRequest request)
+		{
+			var result = await _authService.SendResetPasswordCodeAsync(request.Email);
+			return result.IsSuccess ? Ok() : result.ToProblem();
+		}
+
+		[HttpPost("reset-password")]
+		public async Task<IActionResult> ResetPassword([FromBody] Shared.Models.Authentication.ResetPasswordRequest request)
+		{
+			var result = await _authService.ResetPasswordAsync(request);
+			return result.IsSuccess ? Ok() : result.ToProblem();
 		}
 	}
 }

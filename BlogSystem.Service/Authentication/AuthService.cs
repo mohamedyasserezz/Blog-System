@@ -15,6 +15,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using BlogSystem.Infrastructure.Data.Seed.Authentication;
+using BlogSystem.Shared.Helpers;
+using Hangfire;
+using Microsoft.AspNetCore.Identity.UI.Services;
 
 namespace BlogSystem.Service.Authentication
 {
@@ -24,11 +28,15 @@ namespace BlogSystem.Service.Authentication
 		private readonly IJwtProvider _jwtProvider;
 		private readonly int _refreshTokenExpiryDays = 14;
 		private readonly IMapper _mapper;
-		public AuthService(UserManager<ApplicationUser> userManager, IJwtProvider jwtProvider, IMapper mapper)
+		private readonly IEmailSender _emailSender;
+		private readonly IHttpContextAccessor _httpContextAccessor;
+		public AuthService(UserManager<ApplicationUser> userManager, IJwtProvider jwtProvider, IMapper mapper, IHttpContextAccessor httpContextAccessor, IEmailSender emailSender)
 		{
 			_userManger = userManager;
 			_jwtProvider = jwtProvider;
 			_mapper = mapper;
+			_httpContextAccessor = httpContextAccessor;
+			_emailSender = emailSender;
 		}
 		public async Task<Result<AuthResponse>> Login(LoginAuthRequest request, CancellationToken cancellationToken = default)
 		{
@@ -69,9 +77,7 @@ namespace BlogSystem.Service.Authentication
 			var result = await _userManger.CreateAsync(user, request.Password);
 			if (result.Succeeded)
 			{
-				var code = await _userManger.GenerateEmailConfirmationTokenAsync(user);
-				code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-
+				await _userManger.AddToRoleAsync(user, DefaultRoles.Reader);
 				return Result.Success();
 			}
 			var error = result.Errors.First();
@@ -110,10 +116,66 @@ namespace BlogSystem.Service.Authentication
 			var response = new AuthResponse(user.Id, user.Email, user.FirstName, user.LastName, newToken, expiresIn, newRefreshToken, refreshTokenExpiration);
 			return Result.Success(response);
 		}
+
+		public async Task<Result> SendResetPasswordCodeAsync(string email)
+		{
+
+			var user = await _userManger.FindByEmailAsync(email);
+			if (user is null)
+				return Result.Success();
+
+			if (!user.EmailConfirmed)
+				return Result.Failer(UserErrors.EmailNotConfirmed);
+
+			var code = await _userManger.GeneratePasswordResetTokenAsync(user);
+			code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+			await SendResetPasswordEmailAsync(user, code);
+
+			return Result.Success();
+		}
+
+		public async Task<Result> ResetPasswordAsync(Shared.Models.Authentication.ResetPasswordRequest request)
+		{
+			var user = await _userManger.FindByEmailAsync(request.Email);
+			if (user is null || user.EmailConfirmed)
+				return Result.Failer(UserErrors.InvalidCode);
+
+			IdentityResult result;
+			try
+			{
+				var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(request.Code));
+				result = await _userManger.ResetPasswordAsync(user, code, request.NewPassword);
+			}
+			catch (FormatException)
+			{
+				result = IdentityResult.Failed(_userManger.ErrorDescriber.InvalidToken());
+			}
+
+			if (result.Succeeded)
+				return Result.Success();
+
+			var error = result.Errors.First();
+			return Result.Failer(new Error(error.Code, error.Description, StatusCodes.Status401Unauthorized));
+		}
 		private static string GenerateRefreshToken()
 		{
 			return Convert.ToBase64String(RandomNumberGenerator.GetBytes(64));
 		}
+		private async Task SendResetPasswordEmailAsync(ApplicationUser user, string code)
+		{
+			var origin = _httpContextAccessor.HttpContext?.Request.Headers.Origin;
 
+			var emailBody = EmailBodyBuilder.GenerateEmailBody("ForgetPassword",
+				new Dictionary<string, string>
+				{
+					{"{{name}}",user.FirstName },
+					{ "{{action_url}}",$"{origin}/auth/forgetPassword?email={user.Email}&code={code}" }
+				}
+			);
+			BackgroundJob.Enqueue(() => _emailSender.SendEmailAsync(user.Email!, "✅ Blog System: Reset your password", emailBody));
+
+			await Task.CompletedTask;
+		}
 	}
 }
