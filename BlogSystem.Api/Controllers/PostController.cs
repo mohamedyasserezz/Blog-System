@@ -1,5 +1,6 @@
 ﻿using BlogSystem.Domain.Contract.Posts;
 using BlogSystem.Shared.Abstractions;
+using BlogSystem.Shared.Common.Errors;
 using BlogSystem.Shared.Models.Posts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,17 @@ namespace BlogSystem.Api.Controllers
             var response = await _postService.GetAsync(id, cancellationToken);
 
             return response.IsSuccess ? Ok(response.Value) : response.ToProblem();
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id,
+            [FromBody] PostRequest Request,
+            CancellationToken cancellationToken)
+        {
+            var result = await _postService.UpdateAsync(id, Request, cancellationToken);
+
+            return result.IsSuccess
+                   ? Ok()
+                   : result.ToProblem();
         }
 
     }
