@@ -1,4 +1,5 @@
 ﻿using BlogSystem.Domain.Contract.Posts;
+using BlogSystem.Domain.Contract.Services.Authentication;
 using BlogSystem.Service.Mapping;
 using BlogSystem.Service.Posts;
 using Microsoft.Extensions.Configuration;

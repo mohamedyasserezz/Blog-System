@@ -1,28 +1,24 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-<<<<<<< Updated upstream
-    <UserSecretsId>6ad75689-48cc-44d3-ab33-3c7e64eb1aa0</UserSecretsId>
-=======
-    <UserSecretsId>861e5533-7e7e-4615-a522-73cbb2ff05a6</UserSecretsId>
->>>>>>> Stashed changes
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UserSecretsId>6ad75689-48cc-44d3-ab33-3c7e64eb1aa0</UserSecretsId>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.11">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BlogSystem.Infrastructure\BlogSystem.Infrastructure.csproj" />
-    <ProjectReference Include="..\BlogSystem.Service\BlogSystem.Service.csproj" />
-    <ProjectReference Include="..\BlogSystem.Shared\BlogSystem.Shared.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\BlogSystem.Infrastructure\BlogSystem.Infrastructure.csproj" />
+		<ProjectReference Include="..\BlogSystem.Service\BlogSystem.Service.csproj" />
+		<ProjectReference Include="..\BlogSystem.Shared\BlogSystem.Shared.csproj" />
+	</ItemGroup>
 
 </Project>
