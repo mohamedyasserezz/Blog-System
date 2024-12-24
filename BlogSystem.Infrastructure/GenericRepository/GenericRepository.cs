@@ -10,21 +10,21 @@ namespace BlogSystem.Infrastructure.GenericRepository
         #region Fields
         
         #endregion
-        public async Task<IEnumerable<TEntity>> GetAllAsync(bool withTracking = false)
+        public async Task<IEnumerable<TEntity>> GetAllAsync(bool withTracking = false, CancellationToken cancellationToken = default)
         {
             return withTracking ?
-                await _dbContext.Set<TEntity>().ToListAsync() :
-                await _dbContext.Set<TEntity>().AsNoTracking().ToListAsync();
+                await _dbContext.Set<TEntity>().ToListAsync(cancellationToken) :
+                await _dbContext.Set<TEntity>().AsNoTracking().ToListAsync(cancellationToken);
         }
 
-        public async Task<TEntity?> GetByIdAsync(int id)
+        public async Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
-            return await _dbContext.Set<TEntity>().FindAsync(id);
+            return await _dbContext.Set<TEntity>().FindAsync(id, cancellationToken);
         }
 
-        public async Task AddAsync(TEntity entity)
+        public async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default)
         {
-            await _dbContext.Set<TEntity>().AddAsync(entity);
+            await _dbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
         }
 
         public void Update(TEntity entity)
@@ -36,7 +36,6 @@ namespace BlogSystem.Infrastructure.GenericRepository
             _dbContext.Remove(entity);
         }
 
-       
-   
+        
     }
 }
