@@ -17,7 +17,8 @@ namespace BlogSystem.Service.Mapping
                 .ForMember(src => src.Tags, config => config.MapFrom(des => des.Tags))
                .ReverseMap();
 
-            CreateMap<TagRequest, Tag>();
+            CreateMap<TagRequest, Tag>()
+                .ReverseMap();
 
 
             CreateMap<ApplicationUser, RegisterRequest>()
