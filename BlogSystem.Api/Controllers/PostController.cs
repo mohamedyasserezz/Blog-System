@@ -22,8 +22,8 @@ namespace BlogSystem.Api.Controllers
             return result.IsSuccess ? Ok(result.Value) : result.ToProblem();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> GetPost(int id, CancellationToken cancellationToken)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetPost([FromRoute] int id, CancellationToken cancellationToken)
         {
             var response = await _postService.GetAsync(id, cancellationToken);
 
@@ -38,7 +38,7 @@ namespace BlogSystem.Api.Controllers
             return response.IsSuccess ? Ok(response.Value) : response.ToProblem();
 
         }
-       
+
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromRoute] int id,
             [FromBody] PostRequest Request,
